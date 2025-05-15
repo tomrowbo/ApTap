@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useKeylessAccounts } from "../core/useKeylessAccounts";
 import { collapseAddress } from "../core/utils";
 import passService from "../services/PassService";
-import ApiHealthStatus from "../components/ApiHealthStatus";
 
 function HomePage() {
   const navigate = useNavigate();
