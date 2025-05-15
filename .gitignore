@@ -40,3 +40,6 @@ Desktop.ini
 # Bun specific
 bun.lockb 
 .vercel
+
+# Vercel
+vercel-dev.json

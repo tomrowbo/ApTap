@@ -10,10 +10,27 @@ interface PassServiceError extends Error {
 export class PassService {
   private readonly API_BASE_URL = '/api/pass';
   private readonly isDev = import.meta.env.DEV === true;
+  private useRealApi = false;
+  
+  constructor() {
+    // Check if we should use the real API by testing the health endpoint
+    if (this.isDev) {
+      fetch('/api/health')
+        .then(response => response.json())
+        .then(data => {
+          // If we get a successful response, use the real API
+          this.useRealApi = true;
+          console.log('API server detected, using real API endpoints');
+        })
+        .catch(() => {
+          console.log('No API server detected, using mock data');
+        });
+    }
+  }
   
   async getWalletPass(walletAddress: string) {
-    // For development, mock the API response
-    if (this.isDev) {
+    // For development, mock the API response only if API server is not running
+    if (this.isDev && !this.useRealApi) {
       console.log('Using mock data for getWalletPass in development');
       return {
         passUrl: null, // Return null to trigger the createWalletPass flow on first run
@@ -52,8 +69,8 @@ export class PassService {
   }
 
   async createWalletPass(walletAddress: string) {
-    // For development, mock the API response
-    if (this.isDev) {
+    // For development, mock the API response only if API server is not running
+    if (this.isDev && !this.useRealApi) {
       console.log('Using mock data for createWalletPass in development');
       return {
         passUrl: 'https://example.com/mock-wallet-pass.pkpass',
@@ -94,8 +111,8 @@ export class PassService {
   }
 
   async updatePassBalance(walletAddress: string, balance: number) {
-    // For development, mock the API response
-    if (this.isDev) {
+    // For development, mock the API response only if API server is not running
+    if (this.isDev && !this.useRealApi) {
       console.log(`Using mock data for updatePassBalance in development (${walletAddress}, ${balance})`);
       return {
         status: 200,
