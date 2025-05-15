@@ -19,7 +19,7 @@ function App() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
           <div className="bg-gray-50 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
             <div className="h-48 overflow-hidden">
-              <img src="/universal.jpg" alt="Super Nintendo World" className="w-full h-full object-cover" />
+              <img src="https://deadline.com/wp-content/uploads/2023/01/Screen-Shot-2023-01-01-at-6.47.01-PM.png?w=681&h=383&crop=1" alt="Super Nintendo World" className="w-full h-full object-cover" />
             </div>
             <div className="p-4">
               <h3 className="font-bold text-lg mb-1">Super Nintendo World</h3>
@@ -29,7 +29,7 @@ function App() {
           
           <div className="bg-gray-50 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
             <div className="h-48 overflow-hidden">
-              <img src="/universal.jpg" alt="How to Train Your Dragon" className="w-full h-full object-cover" />
+              <img src="https://www.usatoday.com/gcdn/authoring/authoring-images/2025/03/15/USAT/82424636007-how-to-train-your-dragon-isle-of-berk-at-universal-epic-universe.jpg?crop=2667,2000,x166,y0" alt="How to Train Your Dragon" className="w-full h-full object-cover" />
             </div>
             <div className="p-4">
               <h3 className="font-bold text-lg mb-1">How to Train Your Dragon</h3>
@@ -39,7 +39,7 @@ function App() {
           
           <div className="bg-gray-50 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
             <div className="h-48 overflow-hidden">
-              <img src="/universal.jpg" alt="Dark Universe" className="w-full h-full object-cover" />
+              <img src="https://cdn2.nbcuni.com/NBCUniversal/2024-06/Dark%20Universe%201920x1080_2.jpg?VersionId=Ad8mpHvpSNGQYPAwMt7AQwBzcuAAV38D" alt="Dark Universe" className="w-full h-full object-cover" />
             </div>
             <div className="p-4">
               <h3 className="font-bold text-lg mb-1">Dark Universe</h3>
@@ -49,7 +49,7 @@ function App() {
           
           <div className="bg-gray-50 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
             <div className="h-48 overflow-hidden">
-              <img src="/universal.jpg" alt="The Wizarding World" className="w-full h-full object-cover" />
+              <img src="https://media.timeout.com/images/103204698/image.jpg" alt="The Wizarding World" className="w-full h-full object-cover" />
             </div>
             <div className="p-4">
               <h3 className="font-bold text-lg mb-1">The Wizarding World</h3>
