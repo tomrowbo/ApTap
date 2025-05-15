@@ -18,6 +18,7 @@ export class PassService {
       fetch('/api/health')
         .then(response => response.json())
         .then(data => {
+          console.log('API health check response:', data);
           // If we get a successful response, use the real API
           this.useRealApi = true;
           console.log('API server detected, using real API endpoints');
