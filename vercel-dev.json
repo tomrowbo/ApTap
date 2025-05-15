@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    }
+  ],
+  "env": {
+    "PASSENTRY_API_URL": "https://api.passentry.com",
+    "PASSENTRY_API_KEY": "dev-mode-mock-key",
+    "PASSENTRY_TEMPLATE_ID": "dev-mode-mock-template-id"
+  }
+}

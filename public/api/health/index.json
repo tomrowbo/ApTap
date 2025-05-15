@@ -1,0 +1,15 @@
+{
+  "status": "ok",
+  "timestamp": "2023-05-15T12:00:00.000Z",
+  "environment": "development",
+  "api": {
+    "configured": false,
+    "credentials": {
+      "apiUrl": false,
+      "apiKey": false,
+      "templateId": false
+    }
+  },
+  "version": "1.0.0",
+  "note": "This is a static version of the health endpoint for development purposes"
+} 

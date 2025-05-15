@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useKeylessAccounts } from "../core/useKeylessAccounts";
 import { collapseAddress } from "../core/utils";
+import passService from "../services/PassService";
+import ApiHealthStatus from "../components/ApiHealthStatus";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -15,13 +17,37 @@ function HomePage() {
     setUserName("Tom Rowbotham");
   }, [activeAccount, navigate]);
 
-  const handleAddToWallet = () => {
+  const handleAddToWallet = async () => {
+    if (!activeAccount) {
+      alert("Please connect your wallet first");
+      return;
+    }
+
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const walletAddress = activeAccount.accountAddress.toString();
+      
+      // First try to get an existing pass
+      let passResult = await passService.getWalletPass(walletAddress);
+      
+      // If no pass exists (null download URL or other issue), create a new one
+      if (!passResult.passUrl) {
+        console.log("No existing pass found, creating a new one");
+        passResult = await passService.createWalletPass(walletAddress);
+      }
+      
+      if (passResult.passUrl) {
+        // Open the pass URL in a new tab/window
+        window.open(passResult.passUrl, '_blank');
+      } else {
+        throw new Error("Failed to get pass download URL");
+      }
+    } catch (error) {
+      console.error("Error getting or creating wallet pass:", error);
+      alert("Failed to add pass to Apple Wallet. Please try again later.");
+    } finally {
       setIsLoading(false);
-      alert("Epic Universe Pass added to Apple Wallet!");
-    }, 1500);
+    }
   };
 
   return (
