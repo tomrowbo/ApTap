@@ -41,8 +41,8 @@ function HomePage() {
       }
       
       if (passResult.passUrl) {
-        // Open the pass URL in a new tab/window
-        window.open(passResult.passUrl, '_blank');
+        // Redirect to the PassEntry URL directly instead of opening in new tab
+        window.location.href = passResult.passUrl;
       } else {
         throw new Error("Failed to get pass download URL");
       }
