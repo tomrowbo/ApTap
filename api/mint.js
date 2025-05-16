@@ -1,5 +1,6 @@
 // Import Aptos SDK
 import { Account, AccountAddress, Aptos, AptosConfig, Network, InputViewFunctionData } from "@aptos-labs/ts-sdk";
+import fetch from 'node-fetch';
 
 async function mintCoin(aptos, admin, receiverAddress, amount) {
   const transaction = await aptos.transaction.build.simple({
@@ -37,6 +38,52 @@ async function checkBalance(aptos, walletAddress, tokenAddress, decimals) {
   } catch (error) {
     console.error(`[mint] Balance check error: ${error.message}`);
     return null;
+  }
+}
+
+/**
+ * Update loyalty pass balance directly via the PassEntry API
+ */
+async function updatePassBalance(walletAddress, balance) {
+  try {
+    console.log(`[mint] Updating PassEntry loyalty balance for ${walletAddress} to ${balance}`);
+    
+    const API_URL = process.env.PASSENTRY_API_URL;
+    const API_KEY = process.env.PASSENTRY_API_KEY;
+    
+    if (!API_URL || !API_KEY) {
+      throw new Error('PassEntry API credentials not configured');
+    }
+    
+    // Call PassEntry API directly
+    const response = await fetch(`${API_URL}/api/v1/loyalty/${walletAddress}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${API_KEY}`,
+      },
+      body: JSON.stringify({
+        overrideBalance: balance
+      })
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error('[mint] PassEntry loyalty update failed:', {
+        status: response.status,
+        error: errorData
+      });
+      throw new Error(`Failed to update PassEntry loyalty balance: ${errorData}`);
+    }
+    
+    console.log('[mint] PassEntry loyalty balance updated successfully');
+    return { 
+      success: true, 
+      status: response.status 
+    };
+  } catch (error) {
+    console.error('[mint] PassEntry loyalty update failed:', error);
+    throw error;
   }
 }
 
@@ -126,6 +173,10 @@ export default async function handler(req, res) {
     // Create recipient account address
     const receiverAddress = AccountAddress.fromString(wallet);
     
+    // Check initial balance before minting
+    const initialBalance = await checkBalance(aptos, wallet, TOKEN_ADDRESS, DECIMALS) || 0;
+    console.log(`[mint] Initial balance: ${initialBalance} tokens`);
+    
     // Mint tokens using the same function as in your_fungible_asset.ts
     console.log("[mint] Calling mintCoin function");
     const txnHash = await mintCoin(aptos, treasury, receiverAddress, baseUnits);
@@ -156,9 +207,20 @@ export default async function handler(req, res) {
       });
     }
     
-    // Check balance after minting (add a small delay to ensure blockchain state is updated)
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    const balanceAfter = await checkBalance(aptos, wallet, TOKEN_ADDRESS, DECIMALS);
+    // Calculate new balance directly (initial + amount) instead of waiting and checking
+    const calculatedBalance = initialBalance + amountNumber;
+    console.log(`[mint] Calculated new balance: ${calculatedBalance} tokens (${initialBalance} + ${amountNumber})`);
+    
+    // Update loyalty pass balance after successful mint
+    let passUpdateSuccess = false;
+    try {
+      await updatePassBalance(wallet, calculatedBalance);
+      passUpdateSuccess = true;
+      console.log(`[mint] PassEntry loyalty balance updated for ${wallet} to ${calculatedBalance}`);
+    } catch (passError) {
+      console.error(`[mint] Failed to update PassEntry loyalty balance: ${passError.message}`);
+      // We don't fail the whole request if pass update fails
+    }
     
     // Add token information to the response
     return res.status(200).json({
@@ -168,7 +230,9 @@ export default async function handler(req, res) {
       recipient: wallet,
       amount: amountNumber,
       tokenAddress: TOKEN_ADDRESS,
-      currentBalance: balanceAfter,
+      previousBalance: initialBalance,
+      calculatedBalance: calculatedBalance,
+      passUpdated: passUpdateSuccess,
       txnInfo: {
         hash: txnHash,
         status: txnResult.success ? 'SUCCESS' : 'FAILED',
