@@ -6,10 +6,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Treasury information from environment variables
-const TREASURY_ADDRESS = process.env.TREASURY_ADDRESS || "0x12d4853fbce0160fb808c672475839cf508cc09b0dc5be199c457f4b566f7589";
-const TREASURY_PRIVATE_KEY = process.env.TREASURY_PRIVATE_KEY || "ed25519-priv-0x280d091793867d0da41554720a30dae91cb59b1964014e8096dacef0b234c976";
-const TOKEN_ADDRESS = process.env.TOKEN_ADDRESS || "0x2408c3efa13aa42e9afeb4735d78af275dd496c1bce5b081fdbc476dae5d9707";
-const DECIMALS = parseInt(process.env.TOKEN_DECIMALS || "8");
+const TREASURY_ADDRESS = process.env.TREASURY_ADDRESS;
+const TREASURY_PRIVATE_KEY = process.env.TREASURY_PRIVATE_KEY;
+const TOKEN_ADDRESS = process.env.TOKEN_ADDRESS;
+const DECIMALS = 8;
 
 // Recipient wallet - modify this to whatever address you want to test with
 const RECIPIENT_WALLET = process.env.RECIPIENT_WALLET || TREASURY_ADDRESS; // Default to treasury address if not specified
