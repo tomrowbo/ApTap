@@ -14,6 +14,11 @@ function HomePage() {
     if (!activeAccount) navigate("/");
     // Simulate fetching user data
     setUserName("Tom Rowbotham");
+    
+    // Log wallet address when available
+    if (activeAccount) {
+      console.log("Wallet Address:", activeAccount.accountAddress.toString());
+    }
   }, [activeAccount, navigate]);
 
   const handleAddToWallet = async () => {
